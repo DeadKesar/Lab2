@@ -1,5 +1,6 @@
 #pragma once
 #include "RimNumber.h"
+#include <iostream>
 
 void RimNumber::Paste(std::wstring& rim, std::wstring ch, int count)
 {
@@ -127,7 +128,7 @@ int RimNumber::RimToArab(std::wstring rim)
     //проверка правил построения римского числа: меньшие числа не стоят перед большими кроме особого случая когда число предыдущего разряда
     // вычитается, нет ситуаций когда из числа сначала вычли единицу, а потом добавили.
     //
-    if (countI > 3 || countV > 1 || countX > 3 || countL > 1 || countC > 3 || countD > 1 || countM > 3 ||
+    if (countI > 3 || countV > 1 || countX > 3 || countL > 1 || countC > 3 || countD > 1 || countM > 10 ||
         countIV > 1 || countIX > 1 || countXL > 1 || countXC > 1 || countCD > 1 || countCM > 1 ||
         (countIV == 1 && countIX == 1) || (countIV == 0 && countIX == 1 && countV > 0) ||
         (countXL == 1 && countXC == 1) || (countXL == 0 && countXC == 1 && countL > 0) ||
@@ -328,18 +329,19 @@ void RimNumber::SetByArab(double numb)
 }
 void RimNumber::CallSetFromConsole(std::wstring const mes)
 {
-    arabNumb = -1;
-    while (arabNumb == -1)
+    std::wcout << (mes);
+    bool isSuccess = true;
+    while (isSuccess)
     {
-        std::wcout << (mes);
-        std::getline(std::wcin, rim);
-        arabNumb = RimToArab(rim);
-        if (arabNumb == -1)
+        std::wcin >> *this;
+        isSuccess = false;
+        if ((int)*this == -1)
         {
-            std::wcout << (L"\n введённое число - некоректно, попробуйте снова. \n");
+            std::wcout << std::endl << L"Римское число не коректно. Попробуйте снова: ";
+            isSuccess = true;
         }
     }
-    if (rim[0] == '-')
+    if (rim[0] == '-' && arabNumb == 1)
     {
         arabNumb *= -1;
     }
@@ -382,3 +384,239 @@ RimNumber RimNumber::operator/(RimNumber aRim)
     temp.SetByArab(this->arabNumb + aRim.arabNumb);
     return temp;
 }
+
+
+
+RimNumber RimNumber::operator+(int num)
+{
+    RimNumber temp;
+    temp.SetByArab(this->arabNumb + num);
+    return temp;
+}
+RimNumber RimNumber::operator-(int num)
+{
+    RimNumber temp;
+    temp.SetByArab(this->arabNumb - num);
+    return temp;
+}
+RimNumber RimNumber::operator*(int num)
+{
+    RimNumber temp;
+    temp.SetByArab(this->arabNumb * num);
+    return temp;
+}
+RimNumber RimNumber::operator/(int num)
+{
+    RimNumber temp;
+    if (num == 0)
+    {
+        std::wcout << L"Делить на 0 нельзя." << std::endl;
+        temp.SetByArab(0);
+        return temp;
+    }
+    temp.SetByArab(this->arabNumb / num);
+    return temp;
+}
+RimNumber::operator int() 
+{
+    return (int)this->arabNumb;
+}
+RimNumber& RimNumber::operator=(int num)
+{
+    this->SetByArab(num);
+    return *this;
+}
+RimNumber& RimNumber::operator=(RimNumber& rim)
+{
+    if (*this == rim)
+    {
+        return *this;
+    }
+    this->arabNumb = rim.arabNumb;
+    this->rim = rim.rim;
+    return *this;
+}
+
+RimNumber& RimNumber::operator+=(RimNumber& aRim)
+{
+    this->SetByArab(this->arabNumb + aRim.arabNumb);
+    return *this;
+}
+RimNumber& RimNumber::operator-=(RimNumber& aRim)
+{
+    this->SetByArab(this->arabNumb - aRim.arabNumb);
+    return *this;
+}
+RimNumber& RimNumber::operator*=(RimNumber& aRim)
+{
+    this->SetByArab(this->arabNumb * aRim.arabNumb);
+    return *this;
+}
+RimNumber& RimNumber::operator/=(RimNumber& aRim)
+{
+    if (aRim.arabNumb == 0)
+    {
+        std::wcout << L"Делить на 0 нельзя." << std::endl;
+        this->SetByArab(0);
+        return *this;
+    }
+    this->SetByArab(this->arabNumb / aRim.arabNumb);
+    return *this;
+}
+RimNumber& RimNumber::operator+=(int num)
+{
+    this->SetByArab(this->arabNumb + num);
+    return *this;
+}
+RimNumber& RimNumber::operator-=(int num)
+{
+    this->SetByArab(this->arabNumb - num);
+    return *this;
+}
+RimNumber& RimNumber::operator*=(int num)
+{
+    this->SetByArab(this->arabNumb * num);
+    return *this;
+}
+RimNumber& RimNumber::operator/=(int num)
+{
+    if (num == 0)
+    {
+        std::wcout << L"Делить на 0 нельзя." << std::endl;
+        this->SetByArab(0);
+        return *this;
+    }
+    this->SetByArab(this->arabNumb / num);
+    return *this;
+}
+RimNumber& RimNumber::operator++()
+{
+    this->arabNumb++;
+    this->SetByArab(this->arabNumb);
+    return *this;
+}
+RimNumber RimNumber::operator++(int)
+{
+    RimNumber temp = *this;
+    this->arabNumb++;
+    this->SetByArab(this->arabNumb);
+    return temp;
+}
+RimNumber& RimNumber::operator--()
+{
+    this->arabNumb--;
+    this->SetByArab(this->arabNumb);
+    return *this;
+}
+RimNumber RimNumber::operator--(int)
+{
+    RimNumber temp = *this;
+    this->arabNumb--;
+    this->SetByArab(this->arabNumb);
+    return temp;
+}
+
+bool  RimNumber::operator>(RimNumber rim)
+{
+    return this->arabNumb > rim.arabNumb;
+}         
+bool  RimNumber::operator>(int num)
+{
+    return this->arabNumb > num;
+}
+bool  RimNumber::operator<(RimNumber rim)
+{
+    return this->arabNumb < rim.arabNumb;
+}
+bool  RimNumber::operator<(int num)
+{
+    return this->arabNumb < num;
+}
+bool  RimNumber::operator>=(RimNumber rim)
+{
+    return this->arabNumb >= rim.arabNumb;
+}
+bool  RimNumber::operator>=(int num)
+{
+    return this->arabNumb >= num;
+}
+bool  RimNumber::operator<=(RimNumber rim)
+{
+    return this->arabNumb <= rim.arabNumb;
+}
+bool  RimNumber::operator<=(int num)
+{
+    return this->arabNumb <= num;
+}
+bool  RimNumber::operator==(RimNumber rim)
+{
+    return this->arabNumb == rim.arabNumb;
+}
+bool  RimNumber::operator==(int num)
+{
+    return this->arabNumb == num;
+}
+bool  RimNumber::operator!=(RimNumber rim)
+{
+    return this->arabNumb != rim.arabNumb;
+}
+bool  RimNumber::operator!=(int num)
+{
+    return this->arabNumb != num;
+}
+
+std::wostream& operator<<(std::wostream& os,RimNumber& rim)
+{
+    os << rim.rim;
+    return os;
+}
+std::wistream& operator>>(std::wistream& is, RimNumber& rim)
+{
+    std::wstring temp;
+    double num = 0;
+    is >> temp;
+    
+    rim.TryToGetNumber(temp);
+    if (rim.arabNumb != -1)
+    {
+        if (temp[0] == L'-' && (rim.arabNumb != -1 && rim.arabNumb != 1))
+        {
+            rim.arabNumb *= -1;
+        }
+        rim.SetByArab(rim.arabNumb);
+        return is;
+    }
+    {
+        rim.arabNumb = rim.RimToArab(temp);
+        if (temp[0] == L'-' && (rim.arabNumb != -1 && rim.arabNumb != 1))
+        {
+            rim.arabNumb *= -1;
+        }
+        rim.SetByArab(rim.arabNumb);
+    }
+    return is;
+    
+}
+
+RimNumber& RimNumber::TryToGetNumber(std::wstring s)
+{
+    this->arabNumb = 0;
+    int n = s.length()-1;
+    for (int i = n; i >= 0; i--)
+    {
+        if ((int)s[i] >= L'0' && (int)s[i] <= L'9')
+        {
+            this->arabNumb += (s[i] - L'0') * pow(10, n - i);
+        }
+        else if (s[i] == L'-')
+        {
+            continue;
+        }
+        else
+        {
+            this->arabNumb = -1;
+            return *this;
+        }
+    }
+    return *this;
+}       
