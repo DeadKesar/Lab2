@@ -25,31 +25,29 @@ RimNumber Calculate(RimNumber rim1, RimNumber rim2, wchar_t const operation);
 int main()
 {
     _setmode(_fileno(stdout), _O_U16TEXT);
-    wchar_t ch = L'1';
-    std::wcout << ch << "  " << (int)ch << " " << (int)(ch - L'0') <<  std::endl;
-
-
     std::wcout << L"Лабораторная работа №2. \nПо теме: \"Операционный полиморфизм. Перегрузка функций и операций.\"\n" <<
-        L"Вариант №1 \nВыполнил: Порядин В.С." << std::endl;
+                    L"Вариант №1 \nВыполнил: Порядин В.С." << std::endl;
     RimNumber rim1, rim2;
-        std::wcout << L"для римских цифр: работает с римскими целыми числами числами +-4000" << std::endl;
-        std::wcout << L"для арабских цифр: ограничтесь +-10млн. значения больше просто заполняют экран максимальным символом." << std::endl;
-        rim1.CallSetFromConsole(L"введите римское число 1: ");
-        std::wcout << std::endl;
-        rim2.CallSetFromConsole(L"введите римское число 2: ");
-        std::wcout << std::endl;
-   
-        std::wcout << L"ограничтесь +-10млн. значения больше просто заполняют экран максимальным символом." << std::endl;
+    std::wcout << L"для римских цифр: работает с римскими целыми числами числами +-4000" << std::endl;
+    std::wcout << L"для арабских цифр: ограничтесь +-10млн. значения больше просто заполняют экран максимальным символом." << std::endl;
+    rim1.CallSetFromConsole(L"введите римское число 1: ");
+    std::wcout << std::endl;
+    rim2.CallSetFromConsole(L"введите римское число 2: ");
+    std::wcout << std::endl;
     wchar_t operation = GetOperator(L"Выберите операцию + - * / :\n");
     RimNumber answer;
     answer.SetByArab(Calculate(rim1, rim2, operation).GetArab());
-
     std::wcout << rim1.GetArab() << L" " << operation << L" " << rim2.GetArab() << L" = " << answer.GetArab() << std::endl;
     std::wcout << rim1 << L" " << operation << L" " << rim2 << L" = " << answer << std::endl;
-
     RimNumber a, b, c;
+    std::wcout << "Тестовый пример: \"d = a += (b + 10) + ++c\"" << std::endl;
+    a.CallSetFromConsole(L"Введите число a= ");
+    std::wcout << std::endl;
+    b.CallSetFromConsole(L"Введите число b= ");
+    std::wcout << std::endl;
+    c.CallSetFromConsole(L"Введите число c= ");
+    std::wcout << std::endl;
     RimNumber d = a += (b + 10) + ++c;
-
     std::wcout << L"d= " << d.GetArab() << L", a = " << a.GetArab() << L", b= " << b.GetArab() << L", c= " << c.GetArab() << std::endl;
     std::wcout << L"d= " << d << L", a = " << a << L", b= " << b << L", c= " << c << std::endl;
 }
@@ -126,4 +124,3 @@ double GetNumber(std::wstring s)
         }
     }
 }
-
