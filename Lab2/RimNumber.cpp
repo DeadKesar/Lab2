@@ -381,7 +381,7 @@ RimNumber RimNumber::operator/(RimNumber aRim)
         temp.SetByArab(0);
         return temp;
     }
-    temp.SetByArab(this->arabNumb + aRim.arabNumb);
+    temp.SetByArab(this->arabNumb / aRim.arabNumb);
     return temp;
 }
 
